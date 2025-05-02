@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.entity.Docente;
 import com.example.demo.repository.DocenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public class DocenteService {
     DocenteRepository docenteRepository;
 
     public List<Docente> findAll() {
-        return docenteRepository.findAll();
+        return docenteRepository.findAll(Sort.by("id"));
     }
 
     public Docente get(Long id) {

@@ -35,12 +35,12 @@ public class DocenteController {
     }
 
     // SALVA NUOVO
-    @PostMapping
+    @PostMapping("/new")
     public String create(@ModelAttribute("docente") Docente docente,
                          BindingResult br) {
         if (br.hasErrors()) return "form-docente";
         docenteService.save(docente);
-        return "redirect:/docenti";
+        return "redirect:/docenti/lista";
     }
 
     // FORM EDIT

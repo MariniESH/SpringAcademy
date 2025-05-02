@@ -2,6 +2,9 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.sql.Date;
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "docente")
 public class Docente {
@@ -10,22 +13,21 @@ public class Docente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @Column(nullable = false)
     private String nome;
 
     @Column(nullable = false)
     private String cognome;
 
-   // @Column(nullable = false, unique = true)
-   // private String email;
+    @Column(name = "data_di_nascita")
+    private Date data;
 
     /* costruttori */
     public Docente() {}
-    public Docente(String nome, String cognome) {
+    public Docente(String nome, String cognome, Date data) {
         this.nome = nome;
         this.cognome = cognome;
-//        this.email = email;
+        this.data = data;
     }
 
     public Long getId() {
@@ -52,11 +54,11 @@ public class Docente {
         this.cognome = cognome;
     }
 
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
 }

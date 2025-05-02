@@ -9,7 +9,7 @@
 <body class="container mt-4">
 <h1>Elenco Docenti</h1>
 
-<a class="btn btn-primary mb-3" href="<c:url value='/docenti/new'/>">Nuovo Docente</a>
+<a class="btn btn-primary mb-3" href="<c:url value='/docenti/nuovo'/>">Nuovo Docente</a>
 
 <table class="table table-striped">
     <thead>
@@ -17,6 +17,7 @@
         <th>ID</th>
         <th>Nome</th>
         <th>Cognome</th>
+        <th>Data</th>
         <th>Azioni</th>
     </tr>
     </thead>
@@ -26,6 +27,7 @@
             <td>${d.id}</td>
             <td>${d.nome}</td>
             <td>${d.cognome}</td>
+            <td>${d.data}</td>
             <td>
                 <a class="btn btn-sm btn-secondary" href="<c:url value='/docenti/${d.id}/edit'/>">Modifica</a>
                 <a class="btn btn-sm btn-danger"
