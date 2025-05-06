@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "docente")
@@ -21,6 +22,9 @@ public class Docente {
 
     @Column(name = "data_di_nascita")
     private Date data;
+
+    @OneToMany(mappedBy = "docente")
+    private List<Corso> corsi;
 
     /* costruttori */
     public Docente() {}
