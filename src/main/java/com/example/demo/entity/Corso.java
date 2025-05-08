@@ -19,7 +19,7 @@ public class Corso {
     @Column(name = "anno_accademico")
     private Integer anno;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_docente")
     private Docente docente;
 

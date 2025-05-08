@@ -10,6 +10,20 @@
 <h1>Elenco Alunni</h1>
 
 <a class="btn btn-primary mb-3" href="<c:url value='/alunni/nuovo'/>">Nuovo Alunno</a>
+<c:choose>
+    <c:when test="${viewType == 'lista'}">
+        <a class="btn btn-info mb-3" href="<c:url value='/alunni/promossi'/>">Alunni Promossi</a>
+    </c:when>
+    <c:otherwise>
+        <a class="btn btn-secondary mb-3" href="<c:url value='/alunni/lista'/>">Mostra Alunni</a>
+    </c:otherwise>
+</c:choose>
+
+<form method="get" action="<c:url value='/alunni/lista'/>">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="citta" placeholder="Filtra per citt&agrave;" value="${param.citta}">
+    </div>
+</form>
 
 <table class="table table-striped">
     <thead>
@@ -18,7 +32,7 @@
         <th>Nome</th>
         <th>Cognome</th>
         <th>Data</th>
-        <th>Citta</th>
+        <th>Citt&agrave;</th>
         <th>Voto</th>
         <th>Azioni</th>
     </tr>

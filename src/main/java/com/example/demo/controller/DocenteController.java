@@ -20,9 +20,13 @@ public class DocenteController {
 
     // LISTA
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<Docente> docenti = new ArrayList<>();
-        docenti = docenteService.findAll();
+    public String list(@RequestParam(required = false, value = "search") String search, Model model) {
+        List<Docente> docenti;
+        if(search != null && !search.isEmpty()) {
+            docenti = docenteService.searchByNomeOrCognome(search);
+        } else {
+            docenti = docenteService.findAll();
+        }
         model.addAttribute("docenti", docenti);
         return "list-docenti";
     }

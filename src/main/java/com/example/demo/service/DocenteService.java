@@ -30,4 +30,8 @@ public class DocenteService {
     public void delete(Long id) {
         docenteRepository.deleteById(id);
     }
+
+    public List<Docente> searchByNomeOrCognome(String search) {
+        return docenteRepository.findByNomeContainingOrCognomeContaining(search, search);
+    }
 }

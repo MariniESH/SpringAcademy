@@ -30,4 +30,12 @@ public class AlunnoService {
         alunnoRepository.deleteById(id);
     }
 
+    public List<Alunno> getPromossi() {
+        return alunnoRepository.findAllPromossi();
+    }
+
+    public List<Alunno> getByCitta(String citta) {
+        return alunnoRepository.findByCitta(citta);
+    }
+
 }

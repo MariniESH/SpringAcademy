@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -19,36 +20,58 @@ public class AlunnoController {
 
     // LISTA
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<Alunno> alunni = alunnoService.findAll();
-        model.addAttribute("alunni", alunni);
-        return "list-alunni";
+    public ModelAndView list(@RequestParam(required = false, value = "citta")String citta) {
+        ModelAndView model = new ModelAndView("list-alunni");
+        List<Alunno> alunni;
+        if (citta != null && !citta.isEmpty()) {
+            alunni = alunnoService.getByCitta(citta);
+        } else {
+            alunni = alunnoService.findAll();
+        }
+        model.addObject("alunni", alunni);
+        model.addObject("viewType", "lista");
+        return model;
     }
 
     //FORM ALUNNO
     @GetMapping({"/nuovo", "/{id}/edit"})
-    public String showForm(@PathVariable(required = false) Long id, Model model) {
+    public ModelAndView showForm(@PathVariable(required = false) Long id) {
+        ModelAndView model = new ModelAndView("form-alunno");
         Alunno alunno = (id != null) ? alunnoService.get(id) : new Alunno();
-        model.addAttribute("alunno", alunno);
-        return "form-alunno";
+        model.addObject("alunno", alunno);
+        return model;
     }
 
     // CREATE Or UPDATE
     @PostMapping("/save")
-    public String save(@ModelAttribute("alunno") Alunno alunno, BindingResult br) {
+    public ModelAndView save(@ModelAttribute("alunno") Alunno alunno, BindingResult br) {
+        ModelAndView model = new ModelAndView();
         if (br.hasErrors()) {
-            return "form-alunno";
+            model.setViewName("form-alunno");
+            return model;
         }
         alunnoService.save(alunno);
-        return "redirect:/alunni/lista";
+        model.setViewName("redirect:/alunni/lista");
+        return model;
     }
 
 
     // DELETE
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public ModelAndView delete(@PathVariable Long id) {
+        ModelAndView model = new ModelAndView("redirect:/alunni/lista");
         alunnoService.delete(id);
-        return "redirect:/alunni/lista";
+        return model;
     }
+
+    @GetMapping("/promossi")
+    public ModelAndView getPromossi() {
+        ModelAndView model = new ModelAndView("list-alunni");
+        model.addObject("alunni", alunnoService.getPromossi());
+        model.addObject("viewType", "promossi");
+        return model;
+    }
+
+
 
 }

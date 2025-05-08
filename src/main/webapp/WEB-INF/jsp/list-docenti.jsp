@@ -11,6 +11,12 @@
 
 <a class="btn btn-primary mb-3" href="<c:url value='/docenti/nuovo'/>">Nuovo Docente</a>
 
+<form method="get" action="<c:url value='/docenti/lista'/>">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="search" placeholder="Cerca per nome o cognome" value="${param.search}">
+    </div>
+</form>
+
 <table class="table table-striped">
     <thead>
     <tr>
