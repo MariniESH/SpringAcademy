@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.AlunnoDTO;
 import com.example.demo.entity.Alunno;
 import com.example.demo.service.AlunnoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class AlunnoController {
     @GetMapping("/lista")
     public ModelAndView list(@RequestParam(required = false, value = "citta")String citta) {
         ModelAndView model = new ModelAndView("list-alunni");
-        List<Alunno> alunni;
+        List<AlunnoDTO> alunni;
         if (citta != null && !citta.isEmpty()) {
             alunni = alunnoService.getByCitta(citta);
         } else {
@@ -37,14 +38,23 @@ public class AlunnoController {
     @GetMapping({"/nuovo", "/{id}/edit"})
     public ModelAndView showForm(@PathVariable(required = false) Long id) {
         ModelAndView model = new ModelAndView("form-alunno");
-        Alunno alunno = (id != null) ? alunnoService.get(id) : new Alunno();
+        AlunnoDTO alunno;
+
+        if (id != null) {
+            alunno = alunnoService.get(id);
+            model.addObject("title", "Modifica Alunno");
+        } else {
+            alunno = new AlunnoDTO();
+            model.addObject("title", "Nuovo Alunno");
+        };
         model.addObject("alunno", alunno);
+
         return model;
     }
 
     // CREATE Or UPDATE
     @PostMapping("/save")
-    public ModelAndView save(@ModelAttribute("alunno") Alunno alunno, BindingResult br) {
+    public ModelAndView save(@ModelAttribute("alunno") AlunnoDTO alunno, BindingResult br) {
         ModelAndView model = new ModelAndView();
         if (br.hasErrors()) {
             model.setViewName("form-alunno");

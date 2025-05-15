@@ -9,6 +9,7 @@
 <body class="container mt-4">
 <h1>Elenco Alunni</h1>
 
+
 <a class="btn btn-primary mb-3" href="<c:url value='/alunni/nuovo'/>">Nuovo Alunno</a>
 <c:choose>
     <c:when test="${viewType == 'lista'}">
@@ -19,6 +20,7 @@
     </c:otherwise>
 </c:choose>
 
+<!-- Input ricerca -->
 <form method="get" action="<c:url value='/alunni/lista'/>">
     <div class="input-group mb-3">
         <input type="text" class="form-control" name="citta" placeholder="Filtra per citt&agrave;" value="${param.citta}">

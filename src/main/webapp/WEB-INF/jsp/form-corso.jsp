@@ -9,7 +9,7 @@
               href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"/>
 </head>
 <body class="container">
-<h1>Corso</h1>
+<h1>${title}</h1>
     <div class= "container">
     <a class="btn btn-secondary" href="/corsi/lista">Torna Indietro</a>
         <form:form action="/corsi/save" method="post" modelAttribute="corso">
@@ -27,8 +27,13 @@
                 <form:input path="anno" class="form-control" type="number"/>
             </div>
             <div class="m-auto my-2">
-                 <form:label path="docente.id" class="form-label">ID Docente</form:label>
-                 <form:input path="docente.id" class="form-control" type="number"/>
+                 <form:label path="docente.id" class="form-label">Docente</form:label>
+                 <form:select path="docente.id" class="form-select">
+                    <form:option value="">Nessun Docente</form:option>
+                    <c:forEach var="d" items="${docenti}">
+                    <form:option value="${d.id}">${d.nome} ${d.cognome}</form:option>
+                    </c:forEach>
+                 </form:select>
             </div>
             <div class="text-end">
                 <button class="btn btn-primary" type="submit">Salva</button>

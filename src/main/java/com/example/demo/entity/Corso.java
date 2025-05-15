@@ -2,13 +2,15 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "corso")
 public class Corso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column
     private String nome;
@@ -19,15 +21,27 @@ public class Corso {
     @Column(name = "anno_accademico")
     private Integer anno;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_docente")
     private Docente docente;
 
-    public Integer getId() {
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "corsoalunni",
+            joinColumns = {
+                    @JoinColumn(name = "id_corso")
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "id_alunni")
+            }
+    )
+    private List<Alunno> alunni;
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -61,5 +75,13 @@ public class Corso {
 
     public void setDocente(Docente docente) {
         this.docente = docente;
+    }
+
+    public List<Alunno> getAlunni() {
+        return alunni;
+    }
+
+    public void setAlunni(List<Alunno> alunni) {
+        this.alunni = alunni;
     }
 }

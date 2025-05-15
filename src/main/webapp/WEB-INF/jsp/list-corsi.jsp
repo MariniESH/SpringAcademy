@@ -20,6 +20,7 @@
         <th>Anno Accademico</th>
         <th>ID Docente</th>
         <th>Azioni</th>
+        <th>Iscritti</th>
     </tr>
     </thead>
     <tbody>
@@ -29,13 +30,21 @@
             <td>${c.nome}</td>
             <td>${c.ore}</td>
             <td>${c.anno}</td>
-            <td>${c.docente.id}</td>
+            <c:choose>
+                <c:when test="${c.docente.id != null}">
+                    <td>${c.docente.nome} ${c.docente.cognome}</td>
+                </c:when>
+                <c:otherwise>
+                    <td><mark><b>Nessun Docente</b></mark></a>
+                </c:otherwise>
+            </c:choose>
             <td>
                 <a class="btn btn-sm btn-secondary" href="<c:url value='/corsi/${c.id}/edit'/>">Modifica</a>
                 <a class="btn btn-sm btn-danger"
                    href="<c:url value='/corsi/${c.id}/delete'/>"
                    onclick="return confirm('Sei sicuro?')">Elimina</a>
             </td>
+            <td><a class="btn btn-warning mb-3" href="<c:url value='/corsi/${c.id}/iscritti'/>">Iscritti</a></td>
         </tr>
     </c:forEach>
     </tbody>

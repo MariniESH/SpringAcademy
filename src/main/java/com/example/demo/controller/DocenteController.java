@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.DocenteDTO;
 import com.example.demo.entity.Docente;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -21,7 +21,7 @@ public class DocenteController {
     // LISTA
     @GetMapping("/lista")
     public String list(@RequestParam(required = false, value = "search") String search, Model model) {
-        List<Docente> docenti;
+        List<DocenteDTO> docenti;
         if(search != null && !search.isEmpty()) {
             docenti = docenteService.searchByNomeOrCognome(search);
         } else {
@@ -35,12 +35,13 @@ public class DocenteController {
     @GetMapping("/nuovo")
     public String showAdd(Model model) {
         model.addAttribute("docente", new Docente());
+        model.addAttribute("title", "Nuovo Docente");
         return "form-docente";
     }
 
     // SALVA NUOVO
     @PostMapping("/new")
-    public String create(@ModelAttribute("docente") Docente docente,
+    public String create(@ModelAttribute("docente") DocenteDTO docente,
                          BindingResult br) {
         if (br.hasErrors()) return "form-docente";
         docenteService.save(docente);
@@ -51,13 +52,14 @@ public class DocenteController {
     @GetMapping("/{id}/edit")
     public String showEdit(@PathVariable Long id, Model model) {
         model.addAttribute("docente", docenteService.get(id));
+        model.addAttribute("title", "Modifica Docente");
         return "form-docente";
     }
 
     // AGGIORNA
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
-                         @ModelAttribute("docente") Docente docente,
+                         @ModelAttribute("docente") DocenteDTO docente,
                          BindingResult br) {
         if (br.hasErrors()) return "form-docente";
         docente.setId(id);

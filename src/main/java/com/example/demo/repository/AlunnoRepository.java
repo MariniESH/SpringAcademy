@@ -16,4 +16,6 @@ public interface AlunnoRepository extends JpaRepository<Alunno, Long> {
 
     @NativeQuery(value = "SELECT * FROM alunni WHERE voto >= 6.0 ORDER BY id;")
     List<Alunno> findAllPromossi();
+
+    List<Alunno> findByCorsiId(Long corsoId);
 }
