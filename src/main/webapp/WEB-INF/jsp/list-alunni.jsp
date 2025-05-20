@@ -9,6 +9,7 @@
 <body class="container mt-4">
 <h1>Elenco Alunni</h1>
 
+<a class="btn btn-primary mb-3" href="<c:url value='/'/>">Home</a>
 
 <a class="btn btn-primary mb-3" href="<c:url value='/alunni/nuovo'/>">Nuovo Alunno</a>
 <c:choose>
@@ -37,6 +38,7 @@
         <th>Citt&agrave;</th>
         <th>Voto</th>
         <th>Azioni</th>
+        <th>Corsi</th>
     </tr>
     </thead>
     <tbody>
@@ -54,6 +56,7 @@
                    href="<c:url value='/alunni/${a.id}/delete'/>"
                    onclick="return confirm('Sei sicuro?')">Elimina</a>
             </td>
+            <td><a class="btn btn-warning mb-3" href="<c:url value='/alunni/corsi/${a.id}' />">Corsi</a></td>
         </tr>
     </c:forEach>
     </tbody>

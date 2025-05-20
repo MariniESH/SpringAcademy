@@ -3,6 +3,7 @@ package com.example.demo.dto;
 import lombok.Data;
 
 import java.sql.Date;
+import java.util.Set;
 
 @Data
 public class AlunnoDTO {
@@ -12,4 +13,5 @@ public class AlunnoDTO {
     private Date data;
     private String citta;
     private Double voto;
+    private Set<CorsoDTO> corsi;
 }

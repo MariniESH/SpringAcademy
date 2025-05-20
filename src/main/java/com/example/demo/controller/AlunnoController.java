@@ -1,8 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.AlunnoDTO;
-import com.example.demo.entity.Alunno;
+import com.example.demo.dto.CorsoDTO;
 import com.example.demo.service.AlunnoService;
+import com.example.demo.service.CorsoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -18,6 +20,8 @@ public class AlunnoController {
 
     @Autowired
     AlunnoService alunnoService;
+    @Autowired
+    private CorsoService corsoService;
 
     // LISTA
     @GetMapping("/lista")
@@ -82,6 +86,25 @@ public class AlunnoController {
         return model;
     }
 
+    // Implementare metodo per ricevere tutti i corsi frequentati di un determinato alunno
+    @GetMapping("/corsi/{id}")
+    public String showCorsi(@PathVariable Long id, Model model) {
+        model.addAttribute("alunno", alunnoService.get(id));
+        model.addAttribute("corsi", corsoService.findAll());
+        List<Long> corsiId = new ArrayList<>();
+        for (CorsoDTO corso : alunnoService.get(id).getCorsi()) {
+            corsiId.add(corso.getId());
+        }
+        model.addAttribute("iscritti", corsiId);
+        return "corsi-frequentati";
+    }
 
+    @PostMapping("/corsi/{id}")
+    public String addCorsi(@PathVariable Long id,
+                           @RequestParam(required = false, name="corsiIds")List<Long> corsiId) {
+
+        alunnoService.updateCorsi(id, corsiId != null ? corsiId : new ArrayList<>());
+        return "redirect:/alunni/lista";
+    }
 
 }

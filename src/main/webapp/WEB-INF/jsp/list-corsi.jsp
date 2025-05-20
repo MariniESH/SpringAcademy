@@ -8,6 +8,7 @@
 </head>
 <body class="container mt-4">
 <h1>Elenco Corsi</h1>
+<a class="btn btn-primary mb-3" href="<c:url value='/'/>">Home</a>
 
 <a class="btn btn-primary mb-3" href="<c:url value='/corsi/nuovo'/>">Nuovo Corso</a>
 
@@ -18,7 +19,7 @@
         <th>Nome</th>
         <th>Ore</th>
         <th>Anno Accademico</th>
-        <th>ID Docente</th>
+        <th>Docente</th>
         <th>Azioni</th>
         <th>Iscritti</th>
     </tr>
@@ -35,7 +36,7 @@
                     <td>${c.docente.nome} ${c.docente.cognome}</td>
                 </c:when>
                 <c:otherwise>
-                    <td><mark><b>Nessun Docente</b></mark></a>
+                    <td><mark><b>Nessun Docente</b></mark></td>
                 </c:otherwise>
             </c:choose>
             <td>
@@ -44,7 +45,7 @@
                    href="<c:url value='/corsi/${c.id}/delete'/>"
                    onclick="return confirm('Sei sicuro?')">Elimina</a>
             </td>
-            <td><a class="btn btn-warning mb-3" href="<c:url value='/corsi/${c.id}/iscritti'/>">Iscritti</a></td>
+            <td><a class="btn btn-warning mb-3" href="<c:url value='/corsi/alunni/${c.id}' />">Iscritti</a></td>
         </tr>
     </c:forEach>
     </tbody>

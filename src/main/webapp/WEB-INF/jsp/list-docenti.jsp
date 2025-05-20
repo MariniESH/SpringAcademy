@@ -8,6 +8,7 @@
 </head>
 <body class="container mt-4">
 <h1>Elenco Docenti</h1>
+<a class="btn btn-primary mb-3" href="<c:url value='/'/>">Home</a>
 
 <a class="btn btn-primary mb-3" href="<c:url value='/docenti/nuovo'/>">Nuovo Docente</a>
 

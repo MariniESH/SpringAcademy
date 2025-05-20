@@ -3,6 +3,7 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "corso")
@@ -25,17 +26,13 @@ public class Corso {
     @JoinColumn(name = "id_docente")
     private Docente docente;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "corsoalunni",
-            joinColumns = {
-                    @JoinColumn(name = "id_corso")
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "id_alunni")
-            }
+            joinColumns = @JoinColumn(name = "id_corso"),
+            inverseJoinColumns = @JoinColumn(name = "id_alunni")
     )
-    private List<Alunno> alunni;
+    private Set<Alunno> alunni;
 
     public Long getId() {
         return id;
@@ -77,11 +74,11 @@ public class Corso {
         this.docente = docente;
     }
 
-    public List<Alunno> getAlunni() {
+    public Set<Alunno> getAlunni() {
         return alunni;
     }
 
-    public void setAlunni(List<Alunno> alunni) {
+    public void setAlunni(Set<Alunno> alunni) {
         this.alunni = alunni;
     }
 }

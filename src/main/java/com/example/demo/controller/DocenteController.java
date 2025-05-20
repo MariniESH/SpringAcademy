@@ -1,7 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.DocenteDTO;
+import com.example.demo.entity.Corso;
 import com.example.demo.entity.Docente;
+import com.example.demo.repository.CorsoRepository;
 import com.example.demo.service.DocenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,8 @@ public class DocenteController {
 
     @Autowired
     DocenteService docenteService;
+    @Autowired
+    CorsoRepository corsoRepository;
 
     // LISTA
     @GetMapping("/lista")
@@ -70,6 +74,11 @@ public class DocenteController {
     // DELETE
     @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
+
+        for (Corso corso : corsoRepository.findByDocenteId(id)) {
+            corso.setDocente(null);
+            corsoRepository.save(corso);
+        }
         docenteService.delete(id);
         return "redirect:/docenti/lista";
     }

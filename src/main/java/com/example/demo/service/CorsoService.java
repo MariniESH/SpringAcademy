@@ -13,16 +13,15 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class CorsoService {
 
     @Autowired
     CorsoRepository corsoRepository;
-
-    @Autowired
-    AlunnoRepository alunnoRepository;
 
     @Autowired
     DocenteService docenteService;
@@ -33,39 +32,76 @@ public class CorsoService {
     @Autowired
     AlunnoMapper alunnoMapper;
 
+    @Autowired
+    private AlunnoRepository alunnoRepository;
+
+
     public List<CorsoDTO> findAll() {
         List<CorsoDTO> corsi = new ArrayList<>();
-        for(Corso corso : corsoRepository.findAll(Sort.by("id"))) {
-            corsi.add(corsoMapper.converEntityToDTO(corso));
+        List<Corso> corsiToConvert = corsoRepository.findAll(Sort.by("id"));
+        for(Corso corso : corsiToConvert) {
+            CorsoDTO corsoDTO = corsoMapper.converEntityToDTO(corso);
+
+            if (corso.getAlunni() != null) {
+                Set<AlunnoDTO> alunniDTO = alunnoMapper.convertAlunniEntityNoCorsi(corso.getAlunni());
+                corsoDTO.setAlunni(alunniDTO);
+            } else {
+                corsoDTO.setAlunni(null);
+            }
+            corsi.add(corsoDTO);
         }
         return corsi;
     }
 
     public CorsoDTO get(Long id) {
-        return corsoMapper.converEntityToDTO(corsoRepository.findById(id).orElseThrow());
+        Corso corso = corsoRepository.findById(id).orElseThrow();
+        CorsoDTO corsoDTO = corsoMapper.converEntityToDTO(corso);
+        if (corso.getAlunni() != null) {
+            corsoDTO.setAlunni(alunnoMapper.convertAlunniEntityNoCorsi(corso.getAlunni()));
+        } else {
+            corsoDTO.setAlunni(null);
+        }
+        return corsoDTO;
     }
 
     public Corso save(CorsoDTO c) {
+
         if (c.getDocente().getId() != null) {
-             c.setDocente(docenteService.get(c.getDocente().getId()));
+            c.setDocente(docenteService.get(c.getDocente().getId()));
         } else {
             c.setDocente(null);
         }
+        Corso corso = corsoMapper.convertDTOToEntity(c);
 
-        return corsoRepository.save(corsoMapper.convertDTOToEntity(c));
+        if (c.getAlunni() == null && c.getId() != null) {
+            Corso corsoPresente = corsoRepository.findById(c.getId()).orElseThrow();
+            c.setAlunni(alunnoMapper.convertAlunniEntityNoCorsi(corsoPresente.getAlunni()));
+            corso.setAlunni(alunnoMapper.convertAlunniDTONoCorsi(c.getAlunni()));
+        }
+
+        return corsoRepository.save(corso);
     }
 
     public void delete(Long id) {
-        Corso corso = corsoMapper.convertDTOToEntity(get(id));
+        Corso corso = corsoRepository.findById(id).orElseThrow();
+
+        Set<Alunno> alunni = new HashSet<>(corso.getAlunni());
+        for (Alunno alunno : alunni) {
+            alunno.getCorsi().removeIf(c -> c.getId().equals(corso.getId()));
+        }
+        corso.getAlunni().clear();
+
         corsoRepository.deleteById(corso.getId());
     }
 
-    public List<AlunnoDTO> getAlunniByCorsoId(Long id) {
-        List<AlunnoDTO> alunni = new ArrayList<>();
-        for (Alunno alunno : alunnoRepository.findByCorsiId(id)) {
-            alunni.add(alunnoMapper.convertEntityToDTO(alunno));
-        }
-        return alunni;
+
+    public void updateAlunni(Long idCorso, List<Long> idAlunni) {
+
+        Corso corso = corsoRepository.findById(idCorso).orElseThrow();
+        Set<Alunno> nuoviAlunni = new HashSet<>(alunnoRepository.findAllById(idAlunni));
+        corso.setAlunni(nuoviAlunni);
+
+        corsoRepository.save(corso);
     }
 
 }
