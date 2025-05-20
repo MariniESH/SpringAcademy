@@ -24,28 +24,28 @@ public class DocenteService {
     public List<DocenteDTO> findAll() {
         List<DocenteDTO> docenti = new ArrayList<>();
         for(Docente docente : docenteRepository.findAll(Sort.by("id"))) {
-            docenti.add(docenteMapper.convertEntityToDTO(docente));
+            docenti.add(docenteMapper.toDto(docente));
         }
         return docenti;
     }
 
     public DocenteDTO get(Long id) {
-        return docenteMapper.convertEntityToDTO(docenteRepository.findById(id).orElseThrow());
+        return docenteMapper.toDto(docenteRepository.findById(id).orElseThrow());
     }
 
     public Docente save(DocenteDTO d) {
-        return docenteRepository.save(docenteMapper.convertDTOToEntity(d));
+        return docenteRepository.save(docenteMapper.toEntity(d));
     }
 
     public void delete(Long id) {
-        Docente docente = docenteMapper.convertDTOToEntity(get(id));
+        Docente docente = docenteMapper.toEntity(get(id));
         docenteRepository.deleteById(docente.getId());
     }
 
     public List<DocenteDTO> searchByNomeOrCognome(String search) {
         List<DocenteDTO> docenti = new ArrayList<>();
         for(Docente docente : docenteRepository.findByNomeContainingOrCognomeContaining(search, search)) {
-            docenti.add(docenteMapper.convertEntityToDTO(docente));
+            docenti.add(docenteMapper.toDto(docente));
         }
         return docenti;
     }

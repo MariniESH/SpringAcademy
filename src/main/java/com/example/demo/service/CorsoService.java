@@ -1,6 +1,5 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.AlunnoDTO;
 import com.example.demo.dto.AlunnoWithoutCorsiDTO;
 import com.example.demo.dto.CorsoDTO;
 import com.example.demo.entity.Alunno;
@@ -41,7 +40,7 @@ public class CorsoService {
         List<CorsoDTO> corsi = new ArrayList<>();
         List<Corso> corsiToConvert = corsoRepository.findAll(Sort.by("id"));
         for(Corso corso : corsiToConvert) {
-            CorsoDTO corsoDTO = corsoMapper.converEntityToDTO(corso);
+            CorsoDTO corsoDTO = corsoMapper.toDTO(corso);
 
             if (corso.getAlunni() != null) {
                 Set<AlunnoWithoutCorsiDTO> alunniDTO = alunnoMapper.toDtoWithoutCorsi(corso.getAlunni());
@@ -56,7 +55,7 @@ public class CorsoService {
 
     public CorsoDTO get(Long id) {
         Corso corso = corsoRepository.findById(id).orElseThrow();
-        CorsoDTO corsoDTO = corsoMapper.converEntityToDTO(corso);
+        CorsoDTO corsoDTO = corsoMapper.toDTO(corso);
         if (corso.getAlunni() != null) {
             corsoDTO.setAlunni(alunnoMapper.toDtoWithoutCorsi(corso.getAlunni()));
         } else {
@@ -72,7 +71,7 @@ public class CorsoService {
         } else {
             c.setDocente(null);
         }
-        Corso corso = corsoMapper.convertDTOToEntity(c);
+        Corso corso = corsoMapper.toEntity(c);
 
         if (c.getAlunni() == null && c.getId() != null) {
             Corso corsoPresente = corsoRepository.findById(c.getId()).orElseThrow();

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.AlunnoDTO;
+import com.example.demo.dto.AlunnoWithoutCorsiDTO;
 import com.example.demo.dto.CorsoDTO;
 import com.example.demo.dto.DocenteDTO;
 import com.example.demo.entity.Corso;
@@ -80,9 +81,9 @@ public class CorsoController {
         model.addAttribute("corso", corsoService.get(id));
         model.addAttribute("alunni", alunnoService.findAll());
         List<Long> alunniId = new ArrayList<>();
-//        for (AlunnoDTO alunno : corsoService.get(id).getAlunni()) {
-//            alunniId.add(alunno.getId());
-//        }
+        for (AlunnoWithoutCorsiDTO alunno : corsoService.get(id).getAlunni()) {
+            alunniId.add(alunno.getId());
+        }
         model.addAttribute("iscritti", alunniId);
         return "alunni-iscritti";
     }
