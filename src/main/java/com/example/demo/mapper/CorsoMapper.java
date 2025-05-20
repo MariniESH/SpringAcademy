@@ -29,10 +29,7 @@ public class CorsoMapper {
         } else {
             corsoDTO.setDocente(null);
         }
-//        if (corso.getAlunni() != null) {
-//            corsoDTO.setAlunni(convertAlunniEntityNoCorsi(corso.getAlunni()));
-//        } else {
-//        }
+
         corsoDTO.setAlunni(null);
         return corsoDTO;
     }
@@ -48,10 +45,6 @@ public class CorsoMapper {
         } else {
             corso.setDocente(null);
         }
-//        if(corsoDTO.getAlunni() != null) {
-//            corso.setAlunni(convertAlunniDTONoCorsi(corsoDTO.getAlunni()));
-//        } else {
-//        }
 
         corso.setAlunni(null);
         return corso;
@@ -95,36 +88,5 @@ public class CorsoMapper {
         return corsi;
     }
 
-//    public Set<AlunnoDTO> convertAlunniEntityNoCorsi(Set<Alunno> alunni) {
-//        Set<AlunnoDTO> alunniDTO = new HashSet<>();
-//        AlunnoDTO alunnoDTO;
-//        for(Alunno alunno:alunni){
-//            alunnoDTO = new AlunnoDTO();
-//            alunnoDTO.setId(alunno.getId());
-//            alunnoDTO.setNome(alunno.getNome());
-//            alunnoDTO.setCognome(alunno.getCognome());
-//            alunnoDTO.setData(alunno.getData());
-//            alunnoDTO.setCitta(alunno.getCitta());
-//            alunnoDTO.setVoto(alunno.getVoto());
-//            alunniDTO.add(alunnoDTO);
-//        }
-//        return alunniDTO;
-//    }
-//
-//    public Set<Alunno> convertAlunniDTONoCorsi(Set<AlunnoDTO> alunniDTO) {
-//        Set<Alunno> alunni = new HashSet<>();
-//        Alunno alunno;
-//        for(AlunnoDTO alunnoDTO:alunniDTO){
-//            alunno = new Alunno();
-//            alunno.setId(alunnoDTO.getId());
-//            alunno.setNome(alunnoDTO.getNome());
-//            alunno.setCognome(alunnoDTO.getCognome());
-//            alunno.setData(alunnoDTO.getData());
-//            alunno.setCitta(alunnoDTO.getCitta());
-//            alunno.setVoto(alunnoDTO.getVoto());
-//        }
-//
-//        return alunni;
-//    }
 
 }
