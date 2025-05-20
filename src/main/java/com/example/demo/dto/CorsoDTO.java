@@ -11,5 +11,5 @@ public class CorsoDTO {
     private Integer ore;
     private Integer anno;
     private DocenteDTO docente;
-    private Set<AlunnoDTO> alunni;
+    private Set<AlunnoWithoutCorsiDTO> alunni;
 }

@@ -4,13 +4,11 @@ import com.example.demo.dto.AlunnoDTO;
 import com.example.demo.entity.Alunno;
 import com.example.demo.entity.Corso;
 import com.example.demo.mapper.AlunnoMapper;
-import com.example.demo.mapper.CorsoMapper;
 import com.example.demo.repository.AlunnoRepository;
 import com.example.demo.repository.CorsoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,28 +19,24 @@ import java.util.Set;
 public class AlunnoService {
 
     @Autowired
-    AlunnoRepository alunnoRepository;
+    private AlunnoRepository alunnoRepository;
 
     @Autowired
-    AlunnoMapper alunnoMapper;
+    private AlunnoMapper alunnoMapper;
+
     @Autowired
     private CorsoRepository corsoRepository;
 
-
     public List<AlunnoDTO> findAll() {
-        List<AlunnoDTO> alunni = new ArrayList<>();
-        for(Alunno alunno : alunnoRepository.findAll(Sort.by("id"))) {
-            alunni.add(alunnoMapper.convertEntityToDTO(alunno));
-        }
-        return alunni;
+        return alunnoMapper.toDto(alunnoRepository.findAll(Sort.by("id").ascending()));
     }
 
     public AlunnoDTO get(Long id) {
-        return alunnoMapper.convertEntityToDTO(alunnoRepository.findById(id).orElseThrow());
+        return alunnoMapper.toDto(alunnoRepository.findById(id).orElseThrow());
     }
 
     public Alunno save(AlunnoDTO a) {
-        return alunnoRepository.save(alunnoMapper.convertDTOToEntity(a));
+        return alunnoRepository.save(alunnoMapper.toEntity(a));
     }
 
     public void delete(Long id) {
@@ -61,7 +55,7 @@ public class AlunnoService {
     public List<AlunnoDTO> getPromossi() {
         List<AlunnoDTO> alunni = new ArrayList<>();
         for(Alunno alunno : alunnoRepository.findAllPromossi()) {
-            alunni.add(alunnoMapper.convertEntityToDTO(alunno));
+            alunni.add(alunnoMapper.toDto(alunno));
         }
         return alunni;
     }
@@ -69,7 +63,7 @@ public class AlunnoService {
     public List<AlunnoDTO> getByCitta(String citta) {
         List<AlunnoDTO> alunni = new ArrayList<>();
         for(Alunno alunno : alunnoRepository.findByCitta(citta)) {
-            alunni.add(alunnoMapper.convertEntityToDTO(alunno));
+            alunni.add(alunnoMapper.toDto(alunno));
         }
         return alunni;
     }

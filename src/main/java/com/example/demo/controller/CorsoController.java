@@ -80,9 +80,9 @@ public class CorsoController {
         model.addAttribute("corso", corsoService.get(id));
         model.addAttribute("alunni", alunnoService.findAll());
         List<Long> alunniId = new ArrayList<>();
-        for (AlunnoDTO alunno : corsoService.get(id).getAlunni()) {
-            alunniId.add(alunno.getId());
-        }
+//        for (AlunnoDTO alunno : corsoService.get(id).getAlunni()) {
+//            alunniId.add(alunno.getId());
+//        }
         model.addAttribute("iscritti", alunniId);
         return "alunni-iscritti";
     }

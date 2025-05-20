@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.AlunnoDTO;
+import com.example.demo.dto.AlunnoWithoutCorsiDTO;
 import com.example.demo.dto.CorsoDTO;
 import com.example.demo.entity.Alunno;
 import com.example.demo.entity.Corso;
@@ -43,7 +44,7 @@ public class CorsoService {
             CorsoDTO corsoDTO = corsoMapper.converEntityToDTO(corso);
 
             if (corso.getAlunni() != null) {
-                Set<AlunnoDTO> alunniDTO = alunnoMapper.convertAlunniEntityNoCorsi(corso.getAlunni());
+                Set<AlunnoWithoutCorsiDTO> alunniDTO = alunnoMapper.toDtoWithoutCorsi(corso.getAlunni());
                 corsoDTO.setAlunni(alunniDTO);
             } else {
                 corsoDTO.setAlunni(null);
@@ -57,7 +58,7 @@ public class CorsoService {
         Corso corso = corsoRepository.findById(id).orElseThrow();
         CorsoDTO corsoDTO = corsoMapper.converEntityToDTO(corso);
         if (corso.getAlunni() != null) {
-            corsoDTO.setAlunni(alunnoMapper.convertAlunniEntityNoCorsi(corso.getAlunni()));
+            corsoDTO.setAlunni(alunnoMapper.toDtoWithoutCorsi(corso.getAlunni()));
         } else {
             corsoDTO.setAlunni(null);
         }
@@ -75,8 +76,8 @@ public class CorsoService {
 
         if (c.getAlunni() == null && c.getId() != null) {
             Corso corsoPresente = corsoRepository.findById(c.getId()).orElseThrow();
-            c.setAlunni(alunnoMapper.convertAlunniEntityNoCorsi(corsoPresente.getAlunni()));
-            corso.setAlunni(alunnoMapper.convertAlunniDTONoCorsi(c.getAlunni()));
+            c.setAlunni(alunnoMapper.toDtoWithoutCorsi(corsoPresente.getAlunni()));
+            corso.setAlunni(alunnoMapper.toEntityWithoutCorsi(c.getAlunni()));
         }
 
         return corsoRepository.save(corso);
