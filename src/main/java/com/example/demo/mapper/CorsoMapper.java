@@ -5,6 +5,7 @@ import com.example.demo.dto.CorsoWithoutAlunniDTO;
 import com.example.demo.entity.Corso;
 import org.mapstruct.Mapper;
 
+import java.util.List;
 import java.util.Set;
 
 @Mapper(componentModel = "spring")
@@ -17,6 +18,8 @@ public interface CorsoMapper {
     Set<Corso> toEntity(Set<CorsoDTO> corsoDTO);
 
     Set<CorsoDTO> toDTO(Set<Corso> corso);
+
+    List<CorsoDTO> toDTO(List<Corso> corso);
 
     CorsoWithoutAlunniDTO toDTOWithoutAlunni(Corso corso);
 

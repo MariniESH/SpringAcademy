@@ -1,24 +1,19 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AlunnoDTO;
-import com.example.demo.dto.AlunnoWithoutCorsiDTO;
+
 import com.example.demo.dto.CorsoDTO;
-import com.example.demo.dto.DocenteDTO;
-import com.example.demo.entity.Corso;
-import com.example.demo.entity.Docente;
+
 import com.example.demo.service.AlunnoService;
 import com.example.demo.service.CorsoService;
 import com.example.demo.service.DocenteService;
-import jakarta.servlet.RequestDispatcher;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+
 import java.util.List;
-import java.util.Set;
+
 
 @RestController
 @RequestMapping("/corsi")
@@ -74,7 +69,7 @@ public class CorsoController {
         return corsoService.save(corso);
     }
 
-    @DeleteMapping("{id}/")
+    @DeleteMapping("{id}")
     public void delete(@PathVariable Long id) {
         corsoService.delete(id);
     }
