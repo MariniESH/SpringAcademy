@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/alunni")
 public class AlunnoController {
 
@@ -25,65 +25,45 @@ public class AlunnoController {
 
     // LISTA
     @GetMapping("/lista")
-    public ModelAndView list(@RequestParam(required = false, value = "citta")String citta) {
-        ModelAndView model = new ModelAndView("list-alunni");
+    public List<AlunnoDTO> list(@RequestParam(required = false, value = "citta")String citta) {
         List<AlunnoDTO> alunni;
         if (citta != null && !citta.isEmpty()) {
             alunni = alunnoService.getByCitta(citta);
         } else {
             alunni = alunnoService.findAll();
         }
-        model.addObject("alunni", alunni);
-        model.addObject("viewType", "lista");
-        return model;
+        return alunni;
     }
 
-    //FORM ALUNNO
-    @GetMapping({"/nuovo", "/{id}/edit"})
-    public ModelAndView showForm(@PathVariable(required = false) Long id) {
-        ModelAndView model = new ModelAndView("form-alunno");
-        AlunnoDTO alunno;
-
-        if (id != null) {
-            alunno = alunnoService.get(id);
-            model.addObject("title", "Modifica Alunno");
-        } else {
-            alunno = new AlunnoDTO();
-            model.addObject("title", "Nuovo Alunno");
-        };
-        model.addObject("alunno", alunno);
-
-        return model;
+    // READ
+    @GetMapping("/{id}")
+    public AlunnoDTO get(@PathVariable Long id) {
+        return alunnoService.get(id);
     }
 
-    // CREATE Or UPDATE
+    // CREATE
     @PostMapping("/save")
-    public ModelAndView save(@ModelAttribute("alunno") AlunnoDTO alunno, BindingResult br) {
-        ModelAndView model = new ModelAndView();
-        if (br.hasErrors()) {
-            model.setViewName("form-alunno");
-            return model;
-        }
-        alunnoService.save(alunno);
-        model.setViewName("redirect:/alunni/lista");
-        return model;
+    public AlunnoDTO save(@RequestBody AlunnoDTO alunno) {
+        return alunnoService.save(alunno);
+    }
+
+    // UPDATE
+    @PutMapping("{id}")
+    public AlunnoDTO update(@PathVariable Long id, @RequestBody AlunnoDTO alunno) {
+        alunno.setId(id);
+        return alunnoService.save(alunno);
     }
 
 
     // DELETE
-    @GetMapping("/{id}/delete")
-    public ModelAndView delete(@PathVariable Long id) {
-        ModelAndView model = new ModelAndView("redirect:/alunni/lista");
+    @DeleteMapping("/{id}/")
+    public void delete(@PathVariable Long id) {
         alunnoService.delete(id);
-        return model;
     }
 
     @GetMapping("/promossi")
-    public ModelAndView getPromossi() {
-        ModelAndView model = new ModelAndView("list-alunni");
-        model.addObject("alunni", alunnoService.getPromossi());
-        model.addObject("viewType", "promossi");
-        return model;
+    public List<AlunnoDTO> getPromossi() {
+        return alunnoService.getPromossi();
     }
 
     // Implementare metodo per ricevere tutti i corsi frequentati di un determinato alunno

@@ -35,8 +35,9 @@ public class AlunnoService {
         return alunnoMapper.toDto(alunnoRepository.findById(id).orElseThrow());
     }
 
-    public Alunno save(AlunnoDTO a) {
-        return alunnoRepository.save(alunnoMapper.toEntity(a));
+    public AlunnoDTO save(AlunnoDTO a) {
+        Alunno alunno = alunnoRepository.save(alunnoMapper.toEntity(a));
+        return alunnoMapper.toDto(alunno);
     }
 
     public void delete(Long id) {

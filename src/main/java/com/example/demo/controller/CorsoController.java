@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Controller
+@RestController
 @RequestMapping("/corsi")
 public class CorsoController {
 
@@ -35,67 +35,71 @@ public class CorsoController {
 
     // LISTA
     @GetMapping("/lista")
-    public String list(Model model) {
-        List<CorsoDTO> corsi = corsoService.findAll();
-        model.addAttribute("corsi", corsi);
-        return "list-corsi";
+    public List<CorsoDTO> list() {
+        return corsoService.findAll();
     }
 
-    // FORM Corso
-    @GetMapping({"/nuovo","{id}/edit"})
-    public String form(@PathVariable(required = false) Long id, Model model) {
-        CorsoDTO corso;
-        if(id != null) {
-            corso = corsoService.get(id);
-            model.addAttribute("title", "Modifica Corso");
-        } else {
-            corso = new CorsoDTO();
-            model.addAttribute("title", "Nuovo Corso");
-        }
-        List<DocenteDTO> docenti = docenteService.findAll();
-        model.addAttribute("docenti", docenti);
-        model.addAttribute("corso", corso);
-        return "form-corso";
+    @GetMapping("/{id}")
+    public CorsoDTO findById(@PathVariable Long id) {
+        return corsoService.get(id);
     }
 
-    // CREATE or UPDATE
+//    // FORM Corso
+//    @GetMapping({"/nuovo","{id}/edit"})
+//    public String form(@PathVariable(required = false) Long id, Model model) {
+//        CorsoDTO corso;
+//        if(id != null) {
+//            corso = corsoService.get(id);
+//            model.addAttribute("title", "Modifica Corso");
+//        } else {
+//            corso = new CorsoDTO();
+//            model.addAttribute("title", "Nuovo Corso");
+//        }
+//        List<DocenteDTO> docenti = docenteService.findAll();
+//        model.addAttribute("docenti", docenti);
+//        model.addAttribute("corso", corso);
+//        return "form-corso";
+//    }
+
+    // CREATE
     @PostMapping("/save")
-    public String save(@ModelAttribute("corso") CorsoDTO corso, BindingResult br) {
-        if(br.hasErrors()) {
-            return "form-corso";
-        }
-
-        corsoService.save(corso);
-        return "redirect:/corsi/lista";
+    public CorsoDTO save(@RequestBody CorsoDTO corso) {
+        return corsoService.save(corso);
     }
 
-    @GetMapping("{id}/delete")
-    public String delete(@PathVariable Long id) {
+    // UPDATE
+    @PutMapping("/{id}")
+    public CorsoDTO update(@PathVariable Long id, @RequestBody CorsoDTO corso) {
+        corso.setId(id);
+        return corsoService.save(corso);
+    }
+
+    @DeleteMapping("{id}/")
+    public void delete(@PathVariable Long id) {
         corsoService.delete(id);
-        return "redirect:/corsi/lista";
     }
 
 
-    @GetMapping("alunni/{id}")
-    public String showAlunni(@PathVariable Long id, Model model) {
-        model.addAttribute("corso", corsoService.get(id));
-        model.addAttribute("alunni", alunnoService.findAll());
-        List<Long> alunniId = new ArrayList<>();
-        for (AlunnoWithoutCorsiDTO alunno : corsoService.get(id).getAlunni()) {
-            alunniId.add(alunno.getId());
-        }
-        model.addAttribute("iscritti", alunniId);
-        return "alunni-iscritti";
-    }
+//    @GetMapping("alunni/{id}")
+//    public String showAlunni(@PathVariable Long id, Model model) {
+//        model.addAttribute("corso", corsoService.get(id));
+//        model.addAttribute("alunni", alunnoService.findAll());
+//        List<Long> alunniId = new ArrayList<>();
+//        for (AlunnoWithoutCorsiDTO alunno : corsoService.get(id).getAlunni()) {
+//            alunniId.add(alunno.getId());
+//        }
+//        model.addAttribute("iscritti", alunniId);
+//        return "alunni-iscritti";
+//    }
 
 
 
-    @PostMapping("/alunni/{idCorso}")
-    public String addAlunni(
-            @PathVariable Long idCorso,
-            @RequestParam(required = false, name = "alunniIds") List<Long> idAlunni) {
-
-        corsoService.updateAlunni(idCorso, idAlunni != null ? idAlunni : new ArrayList<>());
-        return "redirect:/corsi/lista";
-    }
+//    @PostMapping("/alunni/{idCorso}")
+//    public String addAlunni(
+//            @PathVariable Long idCorso,
+//            @RequestParam(required = false, name = "alunniIds") List<Long> idAlunni) {
+//
+//        corsoService.updateAlunni(idCorso, idAlunni != null ? idAlunni : new ArrayList<>());
+//        return "redirect:/corsi/lista";
+//    }
 }

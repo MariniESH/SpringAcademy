@@ -64,22 +64,22 @@ public class CorsoService {
         return corsoDTO;
     }
 
-    public Corso save(CorsoDTO c) {
+    public CorsoDTO save(CorsoDTO c) {
 
-        if (c.getDocente().getId() != null) {
+        if (c.getDocente() != null && c.getDocente().getId() != null) {
             c.setDocente(docenteService.get(c.getDocente().getId()));
         } else {
             c.setDocente(null);
         }
         Corso corso = corsoMapper.toEntity(c);
 
-        if (c.getAlunni() == null && c.getId() != null) {
+        if (c.getAlunni() != null && c.getId() != null) {
             Corso corsoPresente = corsoRepository.findById(c.getId()).orElseThrow();
             c.setAlunni(alunnoMapper.toDtoWithoutCorsi(corsoPresente.getAlunni()));
             corso.setAlunni(alunnoMapper.toEntityWithoutCorsi(c.getAlunni()));
         }
 
-        return corsoRepository.save(corso);
+        return corsoMapper.toDTO(corsoRepository.save(corso));
     }
 
     public void delete(Long id) {

@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.dto.CorsoDTO;
+import com.example.demo.dto.CorsoWithoutAlunniDTO;
 import com.example.demo.entity.Corso;
 import org.mapstruct.Mapper;
 
@@ -17,5 +18,11 @@ public interface CorsoMapper {
 
     Set<CorsoDTO> toDTO(Set<Corso> corso);
 
+    CorsoWithoutAlunniDTO toDTOWithoutAlunni(Corso corso);
 
+    Set<CorsoWithoutAlunniDTO> toDTOWithoutAlunni(Set<Corso> corso);
+
+    Corso toEntityWithoutAlunni (CorsoWithoutAlunniDTO corsoWithoutAlunniDTO);
+
+    Set<Corso> toEntityWithoutAlunni (Set<CorsoWithoutAlunniDTO> corsoWithoutAlunniDTO);
 }

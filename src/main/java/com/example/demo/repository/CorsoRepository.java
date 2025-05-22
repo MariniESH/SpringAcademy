@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Set;
 
 
-@Repository
+
 public interface CorsoRepository extends JpaRepository<Corso, Long> {
 
     Set<Corso> findByDocenteId(Long docenteId);

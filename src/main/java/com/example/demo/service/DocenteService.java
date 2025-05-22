@@ -33,8 +33,9 @@ public class DocenteService {
         return docenteMapper.toDto(docenteRepository.findById(id).orElseThrow());
     }
 
-    public Docente save(DocenteDTO d) {
-        return docenteRepository.save(docenteMapper.toEntity(d));
+    public DocenteDTO save(DocenteDTO d) {
+        Docente docente = docenteRepository.save(docenteMapper.toEntity(d));
+        return docenteMapper.toDto(docente);
     }
 
     public void delete(Long id) {
