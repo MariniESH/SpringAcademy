@@ -60,25 +60,4 @@ public class AlunnoController {
         return alunnoService.getPromossi();
     }
 
-    // Implementare metodo per ricevere tutti i corsi frequentati di un determinato alunno
-//    @GetMapping("/corsi/{id}")
-//    public String showCorsi(@PathVariable Long id, Model model) {
-//        model.addAttribute("alunno", alunnoService.get(id));
-//        model.addAttribute("corsi", corsoService.findAll());
-//        List<Long> corsiId = new ArrayList<>();
-//        for (CorsoWithoutAlunniDTO corso : alunnoService.get(id).getCorsi()) {
-//            corsiId.add(corso.getId());
-//        }
-//        model.addAttribute("iscritti", corsiId);
-//        return "corsi-frequentati";
-//    }
-//
-//    @PostMapping("/corsi/{id}")
-//    public String addCorsi(@PathVariable Long id,
-//                           @RequestParam(required = false, name="corsiIds")List<Long> corsiId) {
-//
-//        alunnoService.updateCorsi(id, corsiId != null ? corsiId : new ArrayList<>());
-//        return "redirect:/alunni/lista";
-//    }
-
 }

@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.sql.Date;
 import java.util.Set;
 
+
 @Entity
 @Table(name = "Alunni")
 public class Alunno {
