@@ -22,9 +22,6 @@ public class Docente {
     @Column(name = "data_di_nascita")
     private Date data;
 
-    @OneToMany(mappedBy = "docente")
-    private List<Corso> corsi;
-
     /* costruttori */
     public Docente() {}
     public Docente(String nome, String cognome, Date data) {

@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.AlunnoDTO;
 import com.example.demo.service.AlunnoService;
-import com.example.demo.service.CorsoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +13,6 @@ public class AlunnoController {
 
     @Autowired
     AlunnoService alunnoService;
-    @Autowired
-    private CorsoService corsoService;
 
     // LISTA
     @GetMapping("/lista")

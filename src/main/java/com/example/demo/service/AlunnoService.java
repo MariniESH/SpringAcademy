@@ -1,16 +1,11 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.AlunnoDTO;
-import com.example.demo.dto.AlunnoWithoutCorsiDTO;
-import com.example.demo.dto.CorsoDTO;
-import com.example.demo.dto.CorsoWithoutAlunniDTO;
+import com.example.demo.dto.*;
 import com.example.demo.entity.Alunno;
-import com.example.demo.entity.Corso;
 import com.example.demo.mapper.AlunnoMapper;
-import com.example.demo.mapper.CorsoMapper;
 import com.example.demo.repository.AlunnoRepository;
-import com.example.demo.repository.CorsoRepository;
-import org.apache.taglibs.standard.tag.common.fmt.SetTimeZoneSupport;
+import com.example.demo.service.connector.CorsoAlunniConnector;
+import com.example.demo.service.connector.CorsoConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -30,54 +25,56 @@ public class AlunnoService {
     private AlunnoMapper alunnoMapper;
 
     @Autowired
-    private CorsoRepository corsoRepository;
+    private CorsoConnector corsoConnector;
+
     @Autowired
-    private CorsoMapper corsoMapper;
+    private CorsoAlunniConnector corsoAlunniConnector;
 
 
     public List<AlunnoDTO> findAll() {
-        return alunnoMapper.toDto(alunnoRepository.findAll(Sort.by("id").ascending()));
+        List<AlunnoDTO> alunni = alunnoMapper.toDto(alunnoRepository.findAll(Sort.by("id").ascending()));
+        alunni.forEach(this::addCorsi);
+        return alunni;
     }
 
+    // Implementare metodo diverso per non creare un loop infinito
     public AlunnoDTO get(Long id) {
-        return alunnoMapper.toDto(alunnoRepository.findById(id).orElseThrow());
+        AlunnoDTO alunno = alunnoMapper.toDto(alunnoRepository.findById(id).orElseThrow());
+        addCorsi(alunno);
+        return alunno;
     }
-
-    public AlunnoWithoutCorsiDTO getWithoutCorsi(Long id) {
-        return alunnoMapper.toDtoWithoutCorsi(alunnoRepository.findById(id).orElseThrow());
-    }
+//     Possibile implementazione per evitare loop infinito
+//    public AlunnoWithoutCorsiDTO getWithoutCorsi(Long id) {
+//        return alunnoMapper.toDtoWithoutCorsi(alunnoRepository.findById(id).orElseThrow());
+//    }
 
     public AlunnoDTO save(AlunnoDTO a) {
-        Alunno alunno;
-        if (a.getId() != null) {
-            alunno = alunnoRepository.findById(a.getId()).orElseThrow();
-            if(alunno.getCorsi() != null) {
-                removeCorsi(alunno);
-            }
-            if (a.getCorsi() != null) {
-                List<Long> nuoviCorsi = new ArrayList<>();
-                for (CorsoDTO corsoDTO : a.getCorsi()) {
-                    nuoviCorsi.add(corsoDTO.getId());
-                }
-                a.setCorsi(addCorsi(alunno, nuoviCorsi));
-            }
-        } else {
-            if (a.getCorsi() != null) {
-                Set<CorsoDTO> corsi = new HashSet<>();
-                for (CorsoDTO corsoDTO : a.getCorsi()) {
-                    corsi.add(corsoMapper.toDTO(corsoRepository.findById(corsoDTO.getId()).orElseThrow()));
-                }
-                a.setCorsi(corsi);
-            }
+        Alunno alunno = alunnoRepository.save(alunnoMapper.toEntity(a));
+        AlunnoDTO alunnoDTO = alunnoMapper.toDto(alunno);
+
+        try {
+           corsoAlunniConnector.deleteIscritti(alunno.getId());
+        } catch(Exception e) {
+            e.printStackTrace();
         }
 
-        alunno = alunnoRepository.save(alunnoMapper.toEntity(a));
-        return alunnoMapper.toDto(alunno);
+        if (a.getCorsi() != null && !a.getCorsi().isEmpty()) {
+            List<CorsoAlunniDTO> iscrizioni = new ArrayList<>();
+            a.getCorsi().forEach(c -> {
+                CorsoAlunniDTO iscrizione = new CorsoAlunniDTO();
+                iscrizione.setCorsoId(c.getId());
+                iscrizione.setAlunnoId(alunnoDTO.getId());
+                iscrizioni.add(iscrizione);
+            });
+            corsoAlunniConnector.postIscritti(iscrizioni);
+            addCorsi(alunnoDTO);
+        }
+        return alunnoDTO;
     }
 
     public void delete(Long id) {
         Alunno alunno = alunnoRepository.findById(id).orElseThrow();
-        removeCorsi(alunno);
+        corsoAlunniConnector.deleteIscritti(alunno.getId());
         alunnoRepository.deleteById(alunno.getId());
     }
 
@@ -97,22 +94,15 @@ public class AlunnoService {
         return alunni;
     }
 
-    public Set<CorsoDTO> addCorsi(Alunno alunno, List<Long> idCorsi) {
-
-        Set<Corso> nuoviCorsi = new HashSet<>(corsoRepository.findAllById(idCorsi));
-        for (Corso corso: nuoviCorsi) {
-            corso.getAlunni().add(alunno);
+    private void addCorsi(AlunnoDTO alunnoDTO) {
+        Set<CorsoWithoutAlunniDTO> corsi;
+        try {
+            List<CorsoAlunniDTO> iscrizioni = corsoAlunniConnector.getIscritti(alunnoDTO.getId());
+            List<Long> corsiIds = iscrizioni.stream().map(CorsoAlunniDTO::getCorsoId).toList();
+            corsi = new HashSet<>(corsoConnector.getCorsiByAlunnoId(corsiIds));
+            alunnoDTO.setCorsi(corsi);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        alunno.setCorsi(nuoviCorsi);
-        return corsoMapper.toDTO(alunno.getCorsi());
-    }
-
-    public void removeCorsi(Alunno alunno) {
-        Set<Corso> oldCorsi = new HashSet<>(alunno.getCorsi());
-
-        for (Corso corso : oldCorsi) {
-            corso.getAlunni().removeIf(a -> a.getId().equals(alunno.getId()));
-        }
-        alunno.getCorsi().clear();
     }
 }

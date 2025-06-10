@@ -29,8 +29,6 @@ public class Alunno {
     @Column
     private Double voto;
 
-    @ManyToMany(mappedBy = "alunni", fetch = FetchType.LAZY)
-    private Set<Corso> corsi;
 
     public Long getId() {
         return id;
@@ -80,11 +78,4 @@ public class Alunno {
         this.voto = voto;
     }
 
-    public Set<Corso> getCorsi() {
-        return corsi;
-    }
-
-    public void setCorsi(Set<Corso> corsi) {
-        this.corsi = corsi;
-    }
 }

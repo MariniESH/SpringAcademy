@@ -13,5 +13,5 @@ public class AlunnoDTO {
     private Date data;
     private String citta;
     private Double voto;
-    private Set<CorsoDTO> corsi;
+    private Set<CorsoWithoutAlunniDTO> corsi;
 }

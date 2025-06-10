@@ -1,9 +1,11 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.CorsoDTO;
 import com.example.demo.dto.DocenteDTO;
 import com.example.demo.entity.Docente;
 import com.example.demo.mapper.DocenteMapper;
 import com.example.demo.repository.DocenteRepository;
+import com.example.demo.service.connector.CorsoConnector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class DocenteService {
 
     @Autowired
     DocenteMapper docenteMapper;
+
+    @Autowired
+    private CorsoConnector corsoConnector;
 
     public List<DocenteDTO> findAll() {
         List<DocenteDTO> docenti = new ArrayList<>();
@@ -38,8 +43,17 @@ public class DocenteService {
         return docenteMapper.toDto(docente);
     }
 
+    // Non mi setta a null l'id docente a Corso nell'altro backend
     public void delete(Long id) {
         Docente docente = docenteMapper.toEntity(get(id));
+
+        // Chiamare il CorsoService per trovare i corsi insegnati dal docente
+        List<CorsoDTO> corsi = corsoConnector.getCorsiByDocenteId(id);
+        corsi.forEach(corsoDTO -> {
+            corsoDTO.setDocente(null);
+            corsoConnector.removeDocente(corsoDTO);
+        });
+
         docenteRepository.deleteById(docente.getId());
     }
 
