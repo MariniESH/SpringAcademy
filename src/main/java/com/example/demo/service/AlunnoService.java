@@ -94,6 +94,11 @@ public class AlunnoService {
         return alunni;
     }
 
+    public Set<AlunnoWithoutCorsiDTO> findAllByIds(List<Long> alunnoIds) {
+        Set<AlunnoWithoutCorsiDTO> alunni = alunnoMapper.toDtoWithoutCorsi(new HashSet<>(alunnoRepository.findAllById(alunnoIds)));
+        return alunni;
+    }
+
     private void addCorsi(AlunnoDTO alunnoDTO) {
         Set<CorsoWithoutAlunniDTO> corsi;
         try {
