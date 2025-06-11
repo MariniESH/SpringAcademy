@@ -12,9 +12,9 @@ import java.util.List;
 @Component
 public class CorsoAlunniConnector {
 
-    private String credentials = "user:pass1234";
-    private String encodedAuth = Base64.getEncoder().encodeToString(credentials.getBytes());
-
+//    private String credentials = "user:pass1234";
+//    private String encodedAuth = Base64.getEncoder().encodeToString(credentials.getBytes());
+//
 
     @Autowired
     private WebClient webClient;
@@ -22,7 +22,7 @@ public class CorsoAlunniConnector {
     public List<CorsoAlunniDTO> getIscritti(Long id) {
         return webClient.get()
                 .uri("/iscrizioni/{id}/corsi", id)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToFlux(CorsoAlunniDTO.class)
                 .collectList()
@@ -33,7 +33,7 @@ public class CorsoAlunniConnector {
         webClient.post()
                 .uri("/iscrizioni/iscrivi")
                 .bodyValue(iscritti)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToFlux(CorsoAlunniDTO.class)
                 .collectList()
@@ -43,7 +43,7 @@ public class CorsoAlunniConnector {
     public void deleteIscritti(Long id) {
         webClient.delete()
                 .uri("/iscrizioni/{id}/corsi", id)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();

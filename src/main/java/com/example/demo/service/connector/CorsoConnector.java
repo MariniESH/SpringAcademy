@@ -4,6 +4,7 @@ import com.example.demo.dto.CorsoAlunniDTO;
 import com.example.demo.dto.CorsoDTO;
 import com.example.demo.dto.CorsoWithoutAlunniDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,9 +17,10 @@ import java.util.stream.Collectors;
 @Component
 public class CorsoConnector {
 
-    private String credentials = "user:pass1234";
-    private String encodedAuth = Base64.getEncoder().encodeToString(credentials.getBytes());
 
+//    private String credentials = "user:pass1234";
+//    private String encodedAuth = Base64.getEncoder().encodeToString(credentials.getBytes());
+//
 
     @Autowired
     WebClient webClient;
@@ -26,7 +28,7 @@ public class CorsoConnector {
     public List<CorsoDTO> getCorsiByDocenteId(Long docenteId) {
         return webClient.get()
                 .uri("/corsi/docente/{docenteId}", docenteId)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToFlux(CorsoDTO.class)
                 .collectList()
@@ -37,7 +39,7 @@ public class CorsoConnector {
         webClient.put()
                 .uri("/corsi/{id}", corsoDTO.getId())
                 .bodyValue(corsoDTO)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToMono(CorsoDTO.class)
                 .block();
@@ -57,7 +59,7 @@ public class CorsoConnector {
         return webClient.post()
                 .uri("/corsi/by-ids")
                 .bodyValue(corsoIds)
-                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
+//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToFlux(CorsoWithoutAlunniDTO.class)
                 .collectList()
