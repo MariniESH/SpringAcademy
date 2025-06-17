@@ -12,17 +12,21 @@ import java.util.List;
 @Component
 public class CorsoAlunniConnector {
 
-//    private String credentials = "user:pass1234";
-//    private String encodedAuth = Base64.getEncoder().encodeToString(credentials.getBytes());
-//
+    private final WebClient.Builder webClientBuilder;
 
     @Autowired
-    private WebClient webClient;
+    public CorsoAlunniConnector(WebClient.Builder webClientBuilder) {
+        this.webClientBuilder = webClientBuilder;
+    }
+
+    private WebClient webClient() {
+        // every time you build, the filter will inject the header
+        return webClientBuilder.build();
+    }
 
     public List<CorsoAlunniDTO> getIscritti(Long id) {
-        return webClient.get()
+        return webClient().get()
                 .uri("/iscrizioni/{id}/corsi", id)
-//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToFlux(CorsoAlunniDTO.class)
                 .collectList()
@@ -30,10 +34,9 @@ public class CorsoAlunniConnector {
     }
 
     public void postIscritti(List<CorsoAlunniDTO> iscritti) {
-        webClient.post()
+        webClient().post()
                 .uri("/iscrizioni/iscrivi")
                 .bodyValue(iscritti)
-//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToFlux(CorsoAlunniDTO.class)
                 .collectList()
@@ -41,9 +44,8 @@ public class CorsoAlunniConnector {
     }
 
     public void deleteIscritti(Long id) {
-        webClient.delete()
+        webClient().delete()
                 .uri("/iscrizioni/{id}/corsi", id)
-//                .header(HttpHeaders.AUTHORIZATION, "Basic " + encodedAuth)
                 .retrieve()
                 .bodyToMono(Void.class)
                 .block();
